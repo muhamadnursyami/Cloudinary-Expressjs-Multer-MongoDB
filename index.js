@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const cloudinary = require("cloudinary").v2;
 const multer = require("multer");
 const Videos = require("./models/video");
+const Buku = require("./models/buku");
 require("dotenv").config();
 const cors = require("cors");
 // Connect DB
@@ -33,39 +34,46 @@ app.post("/upload", upload.single("file"), async (req, res) => {
         if (error) {
           return res.status(500).json({ error: "Cloudinary upload failed" });
         }
-        let video = new Videos({
-          name: req.body.name,
-          url_video: result.secure_url,
-          cloudinary_id: result.public_id,
-        });
-
-        video.save();
-        // res.json({ url: result.secure_url });
-        res.json(result);
+        if (req.body.type === "video") {
+          let video = new Videos({
+            title: req.body.title,
+            description: req.body.description,
+            author: req.body.author,
+            likes: req.body.likes,
+            rating: req.body.rating,
+            category: req.body.category,
+            tanggal_upload: req.body.tanggal_upload,
+            url_thumbnail: req.body.url_thumbnail,
+            url_video: req.body.url_video,
+            url_unduh: result.secure_url,
+          });
+          video.save();
+          res.json(video);
+        } else if (req.body.type === "buku") {
+          let buku = new Buku({
+            title: req.body.title,
+            description: req.body.description,
+            author: req.body.author,
+            tahun_terbit: req.body.tahun_terbit,
+            rating: req.body.rating,
+            star: req.body.star,
+            img_url: req.body.img_url,
+            category: req.body.category,
+            book_url: result.secure_url,
+            download_url: result.secure_url,
+          });
+          buku.save();
+          res.json(buku);
+        }
       })
       .end(req.file.buffer);
+    // res.json(result);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
 
-app.post("/upload", upload.single("file"), (req, res) => {
-  const file = req.file;
-
-  // Upload file to Cloudinary
-  cloudinary.uploader
-    .upload_stream({ resource_type: "auto" }, (error, result) => {
-      if (error) {
-        return res.status(500).json({ error: "Cloudinary upload failed" });
-      }
-
-      // You can do something with the Cloudinary result, e.g., save the URL to a database
-      const publicUrl = result.secure_url;
-      res.json({ url: publicUrl });
-    })
-    .end(file.buffer);
-});
 // app.post("/upload", upload.single("file"), (req, res) => {
 //   const file = req.file;
 

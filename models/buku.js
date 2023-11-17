@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const videoSchema = new mongoose.Schema({
+const bukuSchema = new mongoose.Schema({
   title: {
     type: String,
   },
@@ -9,27 +9,27 @@ const videoSchema = new mongoose.Schema({
   author: {
     type: String,
   },
-  likes: {
+  tahun_terbit: {
     type: String,
   },
   rating: {
     type: String,
   },
+  star: {
+    type: String,
+  },
+  book_url: {
+    type: String,
+  },
+  img_url: {
+    type: String,
+  },
+  download_url: {
+    type: String,
+  },
   category: {
-    type: String,
-  },
-  tanggal_upload: {
-    type: String,
-  },
-  url_thumbnail: {
-    type: String,
-  },
-  url_video: {
-    type: String,
-  },
-  url_unduh: {
     type: String,
   },
 });
 
-module.exports = mongoose.model("Video", videoSchema);
+module.exports = mongoose.model("Buku", bukuSchema);
